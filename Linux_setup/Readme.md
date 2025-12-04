@@ -1,89 +1,66 @@
-🚀 Complete WSL (Ubuntu) Developer Environment Setup
-With Gemini CLI, Claude CLI, CLAUDE-CODE-ROUTER, Node.js, Python, Git, and More
+🚀 Ubuntu (WSL) Full Environment Setup
+Gemini CLI • Claude CLI • Context7 MCP • Node.js • Python • VS Code
 
-This guide explains every step clearly and simply so you can set up a complete AI-development environment on Ubuntu running inside WSL (Windows Subsystem for Linux).
+This guide explains how to set up a clean development environment inside Ubuntu WSL for AI tools like Gemini CLI, Claude CLI, OpenAI, Context7, and more.
 
-Perfect for working with:
+🧩 1. Install Ubuntu (WSL)
 
-Gemini CLI
+Download Ubuntu WSL:
 
-Claude CLI
+👉 https://releases.ubuntu.com/noble/ubuntu-24.04.3-wsl-amd64.wsl
 
-Context7
+Install it, launch it, and create:
 
-MCP tools
+Username
 
-Node.js / Python development
+Password (it will NOT appear while typing — type normally)
 
-Local AI routing
+🧰 STEP-BY-STEP ENVIRONMENT SETUP (Fresh Ubuntu)
 
-🧩 1. Install Ubuntu for WSL
+Follow the steps exactly in this order.
 
-Download the WSL Ubuntu installer:
-
-🔗 https://releases.ubuntu.com/noble/ubuntu-24.04.3-wsl-amd64.wsl
-
-Run it → It installs Ubuntu as a separate Linux environment inside Windows.
-
-Then:
-
-Choose a username
-
-Choose a password
-(Note: it will NOT be visible when typing — this is normal.)
-
-🧰 2. Update System (VERY IMPORTANT)
+2️⃣ Update System (VERY IMPORTANT)
 sudo apt update && sudo apt upgrade -y
 
-🛠️ 3. Install Core Tools
-A. Install Git
+3️⃣ Install Required Tools
+A. Git
 sudo apt install git -y
 
-B. Install Build Tools (required for many npm packages)
+B. Build Tools
 sudo apt install build-essential -y
 
-🐍 4. Install Python + Pip + Venv
+4️⃣ Install Python, Pip, and Venv
 sudo apt install python3 python3-pip python3-venv -y
 
 
-You can create virtual environments later if needed.
+(You may create virtual environments later if needed.)
 
-🟦 5. Install Node.js (Required for Gemini, Claude, MCP)
-
-Install Node.js LTS 22.x:
-
+5️⃣ Install Node.js (Needed for Gemini CLI, Claude CLI, MCP Tools)
+Install Node.js LTS (20.x or 22.x)
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
 
-Verify:
+Check versions:
 
 node -v
 npm -v
 
-📦 6. Fix NPM Permission Issues (Recommended)
-
-This prevents global install errors like EACCES (permission denied).
-
-Step 1: Create a safe directory
+6️⃣ Fix npm Global Permissions (IMPORTANT)
+Step 1 — Create global npm directory
 mkdir ~/.npm-global
 
-Step 2: Tell npm to use it
+Step 2 — Point npm to use it
 npm config set prefix ~/.npm-global
 
-Step 3: Add to PATH
+Step 3 — Update PATH
 echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
 source ~/.bashrc
 
-
-Now install global packages safely:
-
+Step 4 — Install PNPM (no sudo needed)
 npm install -g pnpm
 
-🟪 7. Install PNPM (Recommended for Node Projects)
-npm install -g pnpm
-
-🌟 8. Install Gemini CLI
+7️⃣ Install the Gemini CLI
 npm install -g @google/gemini-cli
 
 
@@ -92,11 +69,11 @@ Login:
 gemini login
 
 
-Initialize project config:
+Initialize:
 
 gemini init
 
-🤖 9. Install Claude CLI
+8️⃣ Install Claude CLI
 npm install -g claude-code
 
 
@@ -104,99 +81,27 @@ Login:
 
 claude login
 
-🔌 10. Install Claude-Code-Router (Router to Use Gemini with Claude CLI)
-npm install -g @anthropic-ai/claude-code @musistudio/claude-code-router
+9️⃣ Install OpenAI CLI (optional but recommended)
+npm install -g openai
 
-
-Create config folders:
-
-mkdir -p ~/.claude-code-router ~/.claude
-
-Create config file:
-cat > ~/.claude-code-router/config.json << 'EOF'
-{
-  "LOG": true,
-  "LOG_LEVEL": "info",
-  "HOST": "127.0.0.1",
-  "PORT": 3456,
-  "API_TIMEOUT_MS": 600000,
-  "Providers": [
-    {
-      "name": "gemini",
-      "api_base_url": "https://generativelanguage.googleapis.com/v1beta/models/",
-      "api_key": "PASTE_YOUR_GEMINI_API_KEY_HERE",
-      "models": [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash"
-      ],
-      "transformer": {
-        "use": ["gemini"]
-      }
-    }
-  ],
-  "Router": {
-    "default": "gemini,gemini-2.5-flash",
-    "background": "gemini,gemini-2.5-flash",
-    "think": "gemini,gemini-2.5-flash",
-    "longContext": "gemini,gemini-2.5-flash",
-    "longContextThreshold": 60000
-  }
-}
-EOF
-
-
-❗ IMPORTANT:
-Environment variables inside JSON (like "api_key": "$GOOGLE_API_KEY") do NOT work.
-You MUST paste the actual Gemini API key into "api_key".
-
-▶️ 11. Start the Router
-ccr start
-
-
-If you see:
-
-✅ Service is already running in the background.
-
-
-→ Your router is running successfully.
-
-Now Claude CLI will use Gemini models through the router.
-
-🤝 12. Use Claude with Gemini
-
-Open a new terminal:
-
-claude chat
-
-
-Type:
-
-Hello
-
-
-If the router is running → Claude responds using Gemini 2.5 Flash.
-
-🔧 13. Install Useful Utilities
-A. curl + wget
+🔟 Install Useful Utilities
+Curl & Wget
 sudo apt install curl wget -y
 
-B. unzip
+Unzip
 sudo apt install unzip -y
 
-C. jq
+jq (JSON tool, helpful for API debugging)
 sudo apt install jq -y
 
-💻 14. Install VS Code (Optional)
+1️⃣1️⃣ (Optional) Install VS Code in Ubuntu
 sudo snap install code --classic
 
-⚙️ 15. Optional: Improve Your .bashrc
-
-Edit:
-
+1️⃣2️⃣ Improve Your Bash Experience
 nano ~/.bashrc
 
 
-Add shortcuts:
+Add these:
 
 alias ll='ls -lah'
 alias g='git'
@@ -207,16 +112,20 @@ Apply:
 
 source ~/.bashrc
 
-🎉 16. Your Linux Development Environment Is Ready
+✅ DONE — Environment Ready
 
-From now on, simply search “WSL” or “Ubuntu” in Windows and use the Linux terminal normally.
+You now have:
 
-You can now run:
+✔ Ubuntu WSL
+✔ Node.js + npm + pnpm
+✔ Python + pip + venv
+✔ Gemini CLI
+✔ Claude CLI
+✔ OpenAI CLI
+✔ Context7-ready environment
+✔ Developer utilities
+✔ Optional VS Code setup
 
-gemini chat → Gemini chat
+To open this environment anytime:
 
-claude chat → Claude using Gemini API
-
-ccr start → Router
-
-Node, Python, Git, MCP tools, everything works smoothly.
+Search WSL or Ubuntu in the Windows Start Menu.
